@@ -22,6 +22,11 @@ public final class ConstantNode extends ExpressionNode {
     }
 
     @Override
+    public double doEvaluate(EvaluationContext context) {
+        return value;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if(this == o)
             return true;

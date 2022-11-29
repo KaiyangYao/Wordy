@@ -1,5 +1,7 @@
 package wordy.ast;
 
+import wordy.interpreter.EvaluationContext;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,6 +29,20 @@ public class BinaryExpressionNode extends ExpressionNode {
         return orderedMap(
             "lhs", lhs,
             "rhs", rhs);
+    }
+
+    @Override
+    public double doEvaluate(EvaluationContext context) {
+        double lhsValue = lhs.evaluate(context);
+        double rhsValue = rhs.evaluate(context);
+
+        return switch (operator) {
+            case ADDITION -> lhsValue + rhsValue;
+            case SUBTRACTION -> lhsValue - rhsValue;
+            case MULTIPLICATION -> lhsValue * rhsValue;
+            case DIVISION -> lhsValue / rhsValue;
+            case EXPONENTIATION -> Math.pow(lhsValue, rhsValue);
+        };
     }
 
     @Override

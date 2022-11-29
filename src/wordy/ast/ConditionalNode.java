@@ -1,5 +1,7 @@
 package wordy.ast;
 
+import wordy.interpreter.EvaluationContext;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,6 +40,27 @@ public class ConditionalNode extends StatementNode {
             "rhs", rhs,
             "ifTrue", ifTrue,
             "ifFalse", ifFalse);
+    }
+
+
+    @Override
+    public void doRun(EvaluationContext context) {
+        double lhsValue = lhs.doEvaluate(context);
+        double rhsValue = rhs.doEvaluate(context);
+        if (checkCondition(lhsValue, rhsValue, operator)) {
+            ifTrue.run(context);
+        } else {
+            ifFalse.run(context);
+        }
+    }
+
+    /** Helper method to check the result of a conditional statement. */
+    private boolean checkCondition(double lhsValue, double rhsValue, Operator operator) {
+        return switch (operator) {
+            case EQUALS -> lhsValue == rhsValue;
+            case LESS_THAN -> lhsValue < rhsValue;
+            case GREATER_THAN -> lhsValue > rhsValue;
+        };
     }
 
     @Override
