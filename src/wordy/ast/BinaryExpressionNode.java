@@ -2,6 +2,7 @@ package wordy.ast;
 
 import wordy.interpreter.EvaluationContext;
 
+import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Objects;
 
@@ -43,6 +44,32 @@ public class BinaryExpressionNode extends ExpressionNode {
             case DIVISION -> lhsValue / rhsValue;
             case EXPONENTIATION -> Math.pow(lhsValue, rhsValue);
         };
+    }
+
+    @Override
+    public void compile(PrintWriter out) {
+        if(operator == Operator.EXPONENTIATION) {
+            out.print("Math.pow(");
+            lhs.compile(out);
+            out.print(",");
+            rhs.compile(out);
+            out.print(")");
+            return;
+        }
+
+        out.print("(");
+        lhs.compile(out);
+        out.print(
+                switch(operator) {
+                    case ADDITION       -> "+";
+                    case SUBTRACTION    -> "-";
+                    case MULTIPLICATION -> "*";
+                    case DIVISION       -> "/";
+                    default -> throw new UnsupportedOperationException("Unknown operator: " + operator);
+                }
+        );
+        rhs.compile(out);
+        out.print(")");
     }
 
     @Override
