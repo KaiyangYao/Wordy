@@ -22,6 +22,9 @@ import wordy.ast.LoopExitNode;
 import wordy.ast.LoopNode;
 import wordy.ast.StatementNode;
 import wordy.ast.VariableNode;
+// FUNCTION STUFF
+import wordy.ast.FunctionNode;
+import wordy.ast.FunctionCallNode;
 
 /**
  * Parses programs or program fragments in the Wordy language.
@@ -137,6 +140,26 @@ public class WordyParser extends BaseParser<ASTNode> {
     Rule LoopExit() {
         return Sequence(KeyPhrase("exit loop"), push(new LoopExitNode()));
     }
+
+    // ------------------- FUNCTION NODE ------------------- 
+    // this is the declaration of a function, Function Call is below
+
+    Rule Function() {
+        return Sequence(
+            KeyPhrase("function"), 
+            // Need to figure out how to get the name/params 
+            OptionalSurroundingSpace(":"),
+            Block(),
+            KeyPhrase("end of function"),
+            push(new FunctionNode((StatementNode) pop())));
+    }
+
+    //------------------- FUNCTION CALL ------------------- 
+    // when a declared function is called
+
+
+
+    //------------------- ------------- -------------------
 
     Rule Assignment() {
         return Sequence(
