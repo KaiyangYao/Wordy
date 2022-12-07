@@ -3,17 +3,20 @@ package wordy.ast;
 import wordy.interpreter.EvaluationContext;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
 public class FunctionNode extends StatementNode {
+    private final String functionName;
+    private final ArrayList<VariableNode> parameters;
     private final StatementNode body;
-    //private final String callName;
-    //maybe an array/list for parameters?
+    private double returnValue;
 
-    public FunctionNode(StatementNode body/* , String callName*/) {
+    public FunctionNode(String functionName, ArrayList<VariableNode> parameters, StatementNode body) {
+        this.functionName = functionName;
+        this.parameters = parameters;
         this.body = body;
-        //this.callName = callName;
     }
 
     @Override

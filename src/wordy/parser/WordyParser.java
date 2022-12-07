@@ -143,16 +143,8 @@ public class WordyParser extends BaseParser<ASTNode> {
 
     // ------------------- FUNCTION NODE ------------------- 
     // this is the declaration of a function, Function Call is below
+    // function myFunc(x, y)
 
-    Rule Function() {
-        return Sequence(
-            KeyPhrase("function"), 
-            // Need to figure out how to get the name/params 
-            OptionalSurroundingSpace(":"),
-            Block(),
-            KeyPhrase("end of function"),
-            push(new FunctionNode((StatementNode) pop())));
-    }
 
     //------------------- FUNCTION CALL ------------------- 
     // when a declared function is called
