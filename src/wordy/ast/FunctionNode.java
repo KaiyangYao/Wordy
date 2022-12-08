@@ -3,20 +3,21 @@ package wordy.ast;
 import wordy.interpreter.EvaluationContext;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class FunctionNode extends StatementNode {
-    private final String functionName;
-    private final ArrayList<VariableNode> parameters;
+    private final VariableNode name;
+    private final List<VariableNode> params;
     private final StatementNode body;
-    private double returnValue;
+    private final ExpressionNode returnValue;
 
-    public FunctionNode(String functionName, ArrayList<VariableNode> parameters, StatementNode body) {
-        this.functionName = functionName;
-        this.parameters = parameters;
+    public FunctionNode(VariableNode name, List<VariableNode> parameters, StatementNode body, ExpressionNode returnValue) {
+        this.name = name;
+        this.params = parameters;
         this.body = body;
+        this.returnValue = returnValue;
     }
 
     @Override
@@ -26,12 +27,13 @@ public class FunctionNode extends StatementNode {
 
     @Override
     public void doRun(EvaluationContext context) {
-        body.run(context); // I have no idea if this is enough
+        // Not implemented yet
+        body.run(context);
     }
 
     @Override
     public void compile(PrintWriter out) {
-        out.println("while(true)"); // This is unchanged from the LoopNode, which I'm basing it off of, I'm 95% sure we don't need it
+        // Not implemented yet
         body.compile(out);
     }
 
@@ -42,7 +44,10 @@ public class FunctionNode extends StatementNode {
         if(o == null || getClass() != o.getClass())
             return false;
         FunctionNode fnNode = (FunctionNode) o;
-        return body.equals(fnNode.body);
+        return name.equals(fnNode.name)
+            && params.equals(fnNode.params)
+            && ((body == null && fnNode.body == null) || (body.equals(fnNode.body)))
+            && returnValue.equals(fnNode.returnValue);
     }
 
     @Override
@@ -52,7 +57,7 @@ public class FunctionNode extends StatementNode {
 
     @Override
     public String toString() {
-        return "FunctionNode{body=" + body + '}';
+        return "FunctionNode{name=" + name + " params=" + params.toString() + " body=" + body + " returnValue=" + returnValue + "}";
     }
     
 }
