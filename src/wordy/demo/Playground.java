@@ -69,6 +69,11 @@ public class Playground {
                 Set b to next.
                 Set count to count minus 1.
             End of loop.
+            
+            Declare function plusOne that takes parameters ( x ):
+                Set a to x plus 1.
+                Return a.
+            End of function.
             """);
 
         astDump = new JTextArea();
