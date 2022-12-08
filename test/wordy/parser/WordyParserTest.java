@@ -249,23 +249,23 @@ public class WordyParserTest {
                     "End of function."));
         assertEquals(
             new FunctionNode(
-                    new VariableNode("sumsquares"),
-                    Arrays.asList(new VariableNode("x"), new VariableNode("y")),
-                    new BlockNode( parseStatement("Set a to (x times x) plus (y times y)") ),
-                    new VariableNode("a")),
-            parseStatement("Declare function sumSquares that takes parameters ( x, y ):" +
-                    "Set a to (x times x) plus (y times y)." +
-                    "Return a." +
-                    "End of function."));
+                new VariableNode("sumsquares"),
+                Arrays.asList(new VariableNode("x"), new VariableNode("y")),
+                new BlockNode( parseStatement("Set a to (x times x) plus (y times y)") ),
+                new VariableNode("a")),
+        parseStatement("Declare function sumSquares that takes parameters ( x, y ):" +
+                "Set a to (x times x) plus (y times y)." +
+                "Return a." +
+                "End of function."));
         assertEquals(
             new FunctionNode(
-                    new VariableNode("noargument"),
-                    Collections.emptyList(),
-                    null,
-                    parseExpression("2 plus 3")),
-            parseStatement("Declare function noArgument that takes parameters ():" +
-                    "Return 2 plus 3." +
-                    "End of function."));
+                new VariableNode("noargument"),
+                Collections.emptyList(),
+                null,
+                parseExpression("2 plus 3")),
+        parseStatement("Declare function noArgument that takes parameters ():" +
+                "Return 2 plus 3." +
+                "End of function."));
     }
 
     @Test
