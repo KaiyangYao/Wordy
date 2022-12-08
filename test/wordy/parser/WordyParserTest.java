@@ -2,15 +2,11 @@ package wordy.parser;
 
 import org.junit.jupiter.api.Test;
 
-import wordy.ast.ASTNode;
-import wordy.ast.AssignmentNode;
-import wordy.ast.BinaryExpressionNode;
-import wordy.ast.BlockNode;
-import wordy.ast.ConditionalNode;
-import wordy.ast.ConstantNode;
-import wordy.ast.LoopExitNode;
-import wordy.ast.LoopNode;
-import wordy.ast.VariableNode;
+import wordy.ast.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static wordy.parser.WordyParser.parseExpression;
@@ -237,6 +233,39 @@ public class WordyParserTest {
                         new LoopExitNode(),
                         BlockNode.EMPTY))),
             parseStatement("loop: set x to x plus 1. if x equals 3 then exit loop. end of loop"));
+    }
+
+    @Test
+    void testFunctionDeclaration() {
+        assertEquals(
+            new FunctionNode(
+                new VariableNode("plusone"),
+                List.of(new VariableNode("x")),
+                new BlockNode( parseStatement("set a to x plus 1") ),
+                new VariableNode("a")),
+            parseStatement("Declare function plusOne that takes parameters ( x ):" +
+                    "Set a to x plus 1." +
+                    "Return a." +
+                    "End of function."));
+        assertEquals(
+            new FunctionNode(
+                    new VariableNode("sumsquares"),
+                    Arrays.asList(new VariableNode("x"), new VariableNode("y")),
+                    new BlockNode( parseStatement("Set a to (x times x) plus (y times y)") ),
+                    new VariableNode("a")),
+            parseStatement("Declare function sumSquares that takes parameters ( x, y ):" +
+                    "Set a to (x times x) plus (y times y)." +
+                    "Return a." +
+                    "End of function."));
+        assertEquals(
+            new FunctionNode(
+                    new VariableNode("noargument"),
+                    Collections.emptyList(),
+                    null,
+                    parseExpression("2 plus 3")),
+            parseStatement("Declare function noArgument that takes parameters ():" +
+                    "Return 2 plus 3." +
+                    "End of function."));
     }
 
     @Test

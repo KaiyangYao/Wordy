@@ -88,7 +88,8 @@ public class WordyParser extends BaseParser<ASTNode> {
             Assignment(),
             Conditional(),
             Loop(),
-            LoopExit());
+            LoopExit(),
+            FunctionDeclaration());
     }
 
     Rule Conditional() {
@@ -144,6 +145,40 @@ public class WordyParser extends BaseParser<ASTNode> {
     // ------------------- FUNCTION NODE ------------------- 
     // this is the declaration of a function, Function Call is below
     // function myFunc(x, y)
+    Rule FunctionDeclaration() {
+        Var<List<VariableNode>> varList = new Var<>(new ArrayList<>());
+        Var<List<StatementNode>> blockNode = new Var<>(new ArrayList<>());
+        return Sequence(
+            KeyPhrase("declare function"),
+            OptionalSpace(),
+            Variable(),
+            KeyPhrase("that takes parameters"),
+            OptionalSurroundingSpace("("),
+            OneOrMore(
+                FirstOf(
+                    OptionalSurroundingSpace(")"),
+                    Sequence(
+                        Variable(),
+                        varList.get().add((VariableNode) pop()),
+                        FirstOf(
+                            OptionalSurroundingSpace(","),
+                            OptionalSurroundingSpace(")")
+                        )
+                    )
+                )
+            ),
+            OptionalSurroundingSpace(":"),
+            ZeroOrMore(
+                Block(),
+                blockNode.get().add((BlockNode) pop())
+            ),
+            KeyPhrase("return"),
+            Expression(),
+            OptionalSurroundingSpace("."),
+            KeyPhrase("end of function."),
+            push(new FunctionNode((VariableNode) pop(1), varList.get(), blockNode.get().isEmpty() ? null : blockNode.get().get(0), (ExpressionNode) pop()))
+        );
+    }
 
 
     //------------------- FUNCTION CALL ------------------- 
