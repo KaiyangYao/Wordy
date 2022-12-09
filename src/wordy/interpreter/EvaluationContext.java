@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import wordy.ast.ASTNode;
+import wordy.ast.FunctionNode;
 
 /**
  * Holds the values of a Wordy program’s variables before, during, and after interpreted execution.
@@ -18,6 +19,7 @@ import wordy.ast.ASTNode;
  */
 public class EvaluationContext {
     private final Map<String,Double> variables = new LinkedHashMap<>();
+    private final Map<String,FunctionNode> functions = new LinkedHashMap<>();
     private final Tracer tracer;
 
     public EvaluationContext(Tracer tracer) {
@@ -41,6 +43,14 @@ public class EvaluationContext {
      */
     public void set(String name, double value) {
         variables.put(name, value);
+    }
+
+    public FunctionNode getFunction(String name) {
+        return functions.get(name);
+    }
+
+    public void setFunction(String name, FunctionNode function) {
+        functions.put(name, function);
     }
 
     public Map<String, Double> allVariables() {
