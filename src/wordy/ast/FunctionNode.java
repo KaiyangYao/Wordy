@@ -3,6 +3,7 @@ package wordy.ast;
 import wordy.interpreter.EvaluationContext;
 
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,19 +23,17 @@ public class FunctionNode extends StatementNode {
 
     @Override
     public Map<String, ASTNode> getChildren() {
-        return Map.of("body", body);
+        return body == null ? Collections.emptyMap(): Map.of("body", body);
     }
 
     @Override
     public void doRun(EvaluationContext context) {
-        // Not implemented yet
-        body.run(context);
+        context.setFunction(name.getName(), this);
     }
 
     @Override
     public void compile(PrintWriter out) {
         // Not implemented yet
-        body.compile(out);
     }
 
     @Override
