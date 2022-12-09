@@ -175,7 +175,7 @@ public class WordyParser extends BaseParser<ASTNode> {
             KeyPhrase("return"),
             Expression(),
             OptionalSurroundingSpace("."),
-            KeyPhrase("end of function."),
+            KeyPhrase("end of function"),
             push(new FunctionNode((VariableNode) pop(1), varList.get(), blockNode.get().isEmpty() ? null : blockNode.get().get(0), (ExpressionNode) pop()))
         );
     }

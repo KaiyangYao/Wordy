@@ -246,7 +246,7 @@ public class WordyParserTest {
             parseStatement("Declare function plusOne that takes parameters ( x ):" +
                     "Set a to x plus 1." +
                     "Return a." +
-                    "End of function."));
+                    "End of function"));
         assertEquals(
             new FunctionNode(
                 new VariableNode("sumsquares"),
@@ -256,7 +256,7 @@ public class WordyParserTest {
         parseStatement("Declare function sumSquares that takes parameters ( x, y ):" +
                 "Set a to (x times x) plus (y times y)." +
                 "Return a." +
-                "End of function."));
+                "End of function"));
         assertEquals(
             new FunctionNode(
                 new VariableNode("noargument"),
@@ -265,7 +265,7 @@ public class WordyParserTest {
                 parseExpression("2 plus 3")),
         parseStatement("Declare function noArgument that takes parameters ():" +
                 "Return 2 plus 3." +
-                "End of function."));
+                "End of function"));
     }
 
     @Test

@@ -146,6 +146,7 @@ public class Playground {
     }
 
     private void highlightSyntaxError(ParseException parseException) {
+        updateDump(astDump, parseException.getMessage());
         ParseError error = parseException.getFirstError();
         try {
             codeEditor.getHighlighter().addHighlight(
