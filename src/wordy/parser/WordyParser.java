@@ -142,17 +142,9 @@ public class WordyParser extends BaseParser<ASTNode> {
         return Sequence(KeyPhrase("exit loop"), push(new LoopExitNode()));
     }
 
-    // ------------------- FUNCTION NODE ------------------- 
-    // this is the declaration of a function, Function Call is below
-    // function myFunc(x, y)
-    Rule FunctionDeclaration() {
-        Var<List<VariableNode>> varList = new Var<>(new ArrayList<>());
-        Var<List<StatementNode>> blockNode = new Var<>(new ArrayList<>());
+    // ------------------- FUNCTION NODE -------------------
+    Rule FunctionVariables(Var<List<VariableNode>> varList ) {
         return Sequence(
-            KeyPhrase("declare function"),
-            OptionalSpace(),
-            Variable(),
-            KeyPhrase("that takes parameters"),
             OptionalSurroundingSpace("("),
             OneOrMore(
                 FirstOf(
@@ -161,12 +153,24 @@ public class WordyParser extends BaseParser<ASTNode> {
                         Variable(),
                         varList.get().add((VariableNode) pop()),
                         FirstOf(
-                            OptionalSurroundingSpace(","),
-                            OptionalSurroundingSpace(")")
+                                OptionalSurroundingSpace(","),
+                                OptionalSurroundingSpace(")")
                         )
                     )
                 )
-            ),
+            )
+        );
+    }
+
+    Rule FunctionDeclaration() {
+        Var<List<VariableNode>> varList = new Var<>(new ArrayList<>());
+        Var<List<StatementNode>> blockNode = new Var<>(new ArrayList<>());
+        return Sequence(
+            KeyPhrase("declare function"),
+            OptionalSpace(),
+            Variable(),
+            KeyPhrase("that takes parameters"),
+            FunctionVariables(varList),
             OptionalSurroundingSpace(":"),
             ZeroOrMore(
                 Block(),
@@ -182,8 +186,17 @@ public class WordyParser extends BaseParser<ASTNode> {
 
 
     //------------------- FUNCTION CALL ------------------- 
-    // when a declared function is called
-
+    Rule FunctionCall() {
+        Var<List<VariableNode>> varList = new Var<>(new ArrayList<>());
+        return Sequence(
+            OptionalSpace(),
+            KeyPhrase("the result of calling"),
+            OptionalSurroundingSpace(Variable()),
+            KeyPhrase("with"),
+            FunctionVariables(varList),
+            push(new FunctionCallNode((VariableNode) pop(), varList.get()))
+        );
+    }
 
 
     //------------------- ------------- -------------------
@@ -199,7 +212,10 @@ public class WordyParser extends BaseParser<ASTNode> {
     }
 
     Rule Expression() {
-        return AdditiveExpression();
+        return FirstOf(
+            FunctionCall(),
+            AdditiveExpression()
+        );
     }
 
     Rule AdditiveExpression() {
