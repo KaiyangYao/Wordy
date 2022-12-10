@@ -2,11 +2,10 @@ package wordy.ast;
 
 import wordy.interpreter.EvaluationContext;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class FunctionCallNode extends ExpressionNode {
     private final VariableNode name;
@@ -33,19 +32,24 @@ public class FunctionCallNode extends ExpressionNode {
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(name);
     }
 
     @Override
     protected double doEvaluate(EvaluationContext context) {
         FunctionNode function = context.getFunction(name.getName());
+        List<VariableNode> params = function.getParams();
         EvaluationContext closureContext = new EvaluationContext();
-        for (ExpressionNode arg : args) {
-//            String varName = function.getParams().getName();
-//            closureContext.set(varName, context.get(varName));
+        if (params.size() != args.size()) {
+            throw new RuntimeException("Incorrect number of arguments");
         }
+        for (int i = 0; i < params.size(); i++) {
+            closureContext.set(params.get(i).getName(), args.get(i).evaluate(context));
+        }
+
         function.getBody().doRun(closureContext);
-        return 0;
+
+        return closureContext.get("RETURN");
     }
 
     @Override
