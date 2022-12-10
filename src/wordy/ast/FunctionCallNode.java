@@ -2,6 +2,7 @@ package wordy.ast;
 
 import wordy.interpreter.EvaluationContext;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,18 @@ public class FunctionCallNode extends ExpressionNode {
         function.getBody().doRun(closureContext);
 
         return closureContext.get("RETURN");
+    }
+
+    @Override
+    public void compile(PrintWriter out) {
+        name.compile(out);
+        out.print(" (");
+        for (int i = 0; i < args.size() - 1; i++) {
+            args.get(i).compile(out);
+            out.print(", ");
+        }
+        args.get(args.size()-1).compile(out);
+        out.print(");");
     }
 
     @Override

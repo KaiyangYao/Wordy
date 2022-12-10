@@ -39,7 +39,17 @@ public class FunctionNode extends StatementNode {
 
     @Override
     public void compile(PrintWriter out) {
-        // Not implemented yet
+        out.print("public static double ");
+        name.compile(out);
+        out.print(" (");
+        for (int i = 0; i < params.size() - 1; i++) {
+            params.get(i).compile(out);
+            out.print(", ");
+        }
+        params.get(params.size()-1).compile(out);
+        out.println(" ) {");
+        body.compile(out);
+        out.println(" }");
     }
 
     @Override
