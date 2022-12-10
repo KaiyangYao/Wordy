@@ -72,10 +72,10 @@ public class Playground {
             
             Declare function plusOne that takes parameters ( x ):
                 Set a to x plus 1.
-                Return 1 plus 2.
+                Return a.
             End of function.
             
-            Set b to the result of calling plusOne with ( b ).
+            Set b to the result of calling plusOne with ( 18 ).
             """);
         astDump = new JTextArea();
         astDump.setEditable(false);
