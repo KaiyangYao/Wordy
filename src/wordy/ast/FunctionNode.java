@@ -12,7 +12,6 @@ public class FunctionNode extends StatementNode {
     private final VariableNode name;
     private final List<VariableNode> params;
     private final StatementNode body;
-//    private final FunctionReturnNode returnValue;
 
     public FunctionNode(VariableNode name, List<VariableNode> parameters, StatementNode body) {
         this.name = name;

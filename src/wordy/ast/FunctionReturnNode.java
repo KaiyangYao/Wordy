@@ -2,8 +2,8 @@ package wordy.ast;
 
 import wordy.interpreter.EvaluationContext;
 
-import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 public class FunctionReturnNode extends StatementNode {
     private final ExpressionNode returnValue;
@@ -24,7 +24,7 @@ public class FunctionReturnNode extends StatementNode {
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(returnValue);
     }
 
     @Override
