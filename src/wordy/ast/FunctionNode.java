@@ -12,13 +12,20 @@ public class FunctionNode extends StatementNode {
     private final VariableNode name;
     private final List<VariableNode> params;
     private final StatementNode body;
-    private final ExpressionNode returnValue;
+//    private final FunctionReturnNode returnValue;
 
-    public FunctionNode(VariableNode name, List<VariableNode> parameters, StatementNode body, ExpressionNode returnValue) {
+    public FunctionNode(VariableNode name, List<VariableNode> parameters, StatementNode body) {
         this.name = name;
         this.params = parameters;
         this.body = body;
-        this.returnValue = returnValue;
+    }
+
+    public StatementNode getBody() {
+        return body;
+    }
+
+    public List<VariableNode> getParams() {
+        return params;
     }
 
     @Override
@@ -45,8 +52,7 @@ public class FunctionNode extends StatementNode {
         FunctionNode fnNode = (FunctionNode) o;
         return name.equals(fnNode.name)
             && params.equals(fnNode.params)
-            && ((body == null && fnNode.body == null) || (body.equals(fnNode.body)))
-            && returnValue.equals(fnNode.returnValue);
+            && ((body == null && fnNode.body == null) || (body.equals(fnNode.body)));
     }
 
     @Override
@@ -56,7 +62,7 @@ public class FunctionNode extends StatementNode {
 
     @Override
     public String toString() {
-        return "FunctionNode{name=" + name + " params=" + params.toString() + " body=" + body + " returnValue=" + returnValue + "}";
+        return "FunctionNode{name=" + name + " params=" + params.toString() + " body=" + body + "}";
     }
     
 }
