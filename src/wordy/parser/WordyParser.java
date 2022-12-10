@@ -11,20 +11,9 @@ import org.parboiled.support.Var;
 import java.util.ArrayList;
 import java.util.List;
 
-import wordy.ast.ASTNode;
-import wordy.ast.AssignmentNode;
-import wordy.ast.BinaryExpressionNode;
-import wordy.ast.BlockNode;
-import wordy.ast.ConditionalNode;
-import wordy.ast.ConstantNode;
-import wordy.ast.ExpressionNode;
-import wordy.ast.LoopExitNode;
-import wordy.ast.LoopNode;
-import wordy.ast.StatementNode;
-import wordy.ast.VariableNode;
+import wordy.ast.*;
 // FUNCTION STUFF
-import wordy.ast.FunctionNode;
-import wordy.ast.FunctionCallNode;
+
 
 /**
  * Parses programs or program fragments in the Wordy language.
@@ -89,7 +78,8 @@ public class WordyParser extends BaseParser<ASTNode> {
             Conditional(),
             Loop(),
             LoopExit(),
-            FunctionDeclaration());
+            FunctionDeclaration(),
+            FunctionReturn());
     }
 
     Rule Conditional() {
@@ -142,25 +132,25 @@ public class WordyParser extends BaseParser<ASTNode> {
         return Sequence(KeyPhrase("exit loop"), push(new LoopExitNode()));
     }
 
-    // ------------------- FUNCTION NODE -------------------
-    Rule FunctionVariables(Var<List<VariableNode>> varList ) {
-        return Sequence(
-            OptionalSurroundingSpace("("),
-            OneOrMore(
-                FirstOf(
-                    OptionalSurroundingSpace(")"),
-                    Sequence(
-                        Variable(),
-                        varList.get().add((VariableNode) pop()),
-                        FirstOf(
-                                OptionalSurroundingSpace(","),
-                                OptionalSurroundingSpace(")")
-                        )
-                    )
-                )
-            )
-        );
-    }
+    // TODO: Refactor FunctionVariables Rule
+//    Rule FunctionVariables(Var<List<ExpressionNode>> varList) {
+//        return Sequence(
+//            OptionalSurroundingSpace("("),
+//            OneOrMore(
+//                FirstOf(
+//                    OptionalSurroundingSpace(")"),
+//                    Sequence(
+//                        Expression(),
+//                        varList.get().add((ExpressionNode) pop()),
+//                        FirstOf(
+//                                OptionalSurroundingSpace(","),
+//                                OptionalSurroundingSpace(")")
+//                        )
+//                    )
+//                )
+//            )
+//        );
+//    }
 
     Rule FunctionDeclaration() {
         Var<List<VariableNode>> varList = new Var<>(new ArrayList<>());
@@ -170,36 +160,77 @@ public class WordyParser extends BaseParser<ASTNode> {
             OptionalSpace(),
             Variable(),
             KeyPhrase("that takes parameters"),
-            FunctionVariables(varList),
-            OptionalSurroundingSpace(":"),
-            ZeroOrMore(
-                Block(),
-                blockNode.get().add((BlockNode) pop())
+            Sequence(
+                OptionalSurroundingSpace("("),
+                OneOrMore(
+                    FirstOf(
+                        OptionalSurroundingSpace(")"),
+                        Sequence(
+                            Expression(),
+                            varList.get().add((VariableNode) pop()),
+                            FirstOf(
+                                OptionalSurroundingSpace(","),
+                                OptionalSurroundingSpace(")")
+                            )
+                        )
+                    )
+                )
             ),
-            KeyPhrase("return"),
-            Expression(),
-            OptionalSurroundingSpace("."),
+            OptionalSurroundingSpace(":"),
+            OneOrMore(
+                Block()
+//                blockNode.get().add((BlockNode) pop())
+            ),
+//            KeyPhrase("return"),
+//            Expression(),
+//            OptionalSurroundingSpace("."),
             KeyPhrase("end of function"),
-            push(new FunctionNode((VariableNode) pop(1), varList.get(), blockNode.get().isEmpty() ? null : blockNode.get().get(0), (ExpressionNode) pop()))
+            push(new FunctionNode((VariableNode) pop(1), varList.get(),  (StatementNode) pop()))
         );
     }
 
-
-    //------------------- FUNCTION CALL ------------------- 
     Rule FunctionCall() {
-        Var<List<VariableNode>> varList = new Var<>(new ArrayList<>());
+        Var<List<ExpressionNode>> varList = new Var<>(new ArrayList<>());
         return Sequence(
             OptionalSpace(),
             KeyPhrase("the result of calling"),
             OptionalSurroundingSpace(Variable()),
             KeyPhrase("with"),
-            FunctionVariables(varList),
+            Sequence(
+                OptionalSurroundingSpace("("),
+                OneOrMore(
+                    FirstOf(
+                        OptionalSurroundingSpace(")"),
+                        Sequence(
+                            Expression(),
+                            varList.get().add((ExpressionNode) pop()),
+                            FirstOf(
+                                OptionalSurroundingSpace(","),
+                                OptionalSurroundingSpace(")")
+                            )
+                        )
+                    )
+                )
+            ),
             push(new FunctionCallNode((VariableNode) pop(), varList.get()))
         );
     }
 
-
-    //------------------- ------------- -------------------
+    Rule FunctionReturn() {
+        return Sequence(
+            KeyPhrase("return"),
+            FirstOf(
+                Sequence(
+                    KeyPhrase("nothing"),
+                    push(new FunctionReturnNode(null))
+                ),
+                Sequence(
+                    Expression(),
+                    push(new FunctionReturnNode((ExpressionNode) pop()))
+                )
+            )
+        );
+    }
 
     Rule Assignment() {
         return Sequence(
