@@ -166,7 +166,7 @@ public class WordyParser extends BaseParser<ASTNode> {
                     FirstOf(
                         OptionalSurroundingSpace(")"),
                         Sequence(
-                            Expression(),
+                            Variable(),
                             varList.get().add((VariableNode) pop()),
                             FirstOf(
                                 OptionalSurroundingSpace(","),
@@ -179,18 +179,14 @@ public class WordyParser extends BaseParser<ASTNode> {
             OptionalSurroundingSpace(":"),
             OneOrMore(
                 Block()
-//                blockNode.get().add((BlockNode) pop())
             ),
-//            KeyPhrase("return"),
-//            Expression(),
-//            OptionalSurroundingSpace("."),
             KeyPhrase("end of function"),
             push(new FunctionNode((VariableNode) pop(1), varList.get(),  (StatementNode) pop()))
         );
     }
 
     Rule FunctionCall() {
-        Var<List<ExpressionNode>> varList = new Var<>(new ArrayList<>());
+        Var<List<ExpressionNode>> argList = new Var<>(new ArrayList<>());
         return Sequence(
             OptionalSpace(),
             KeyPhrase("the result of calling"),
@@ -203,7 +199,7 @@ public class WordyParser extends BaseParser<ASTNode> {
                         OptionalSurroundingSpace(")"),
                         Sequence(
                             Expression(),
-                            varList.get().add((ExpressionNode) pop()),
+                            argList.get().add((ExpressionNode) pop()),
                             FirstOf(
                                 OptionalSurroundingSpace(","),
                                 OptionalSurroundingSpace(")")
@@ -212,7 +208,7 @@ public class WordyParser extends BaseParser<ASTNode> {
                     )
                 )
             ),
-            push(new FunctionCallNode((VariableNode) pop(), varList.get()))
+            push(new FunctionCallNode((VariableNode) pop(), argList.get()))
         );
     }
 
