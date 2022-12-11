@@ -3,10 +3,7 @@ package wordy.ast;
 import wordy.interpreter.EvaluationContext;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class FunctionCallNode extends ExpressionNode {
     private final VariableNode name;
@@ -19,7 +16,7 @@ public class FunctionCallNode extends ExpressionNode {
 
     @Override
     public Map<String, ASTNode> getChildren() {
-        Map<String, ASTNode> arguments = new HashMap<>();
+        Map<String, ASTNode> arguments = new LinkedHashMap<>();
         for (int i = 0; i < args.size(); i++) {
             arguments.put("arg" + (i + 1), args.get(i));
         }
