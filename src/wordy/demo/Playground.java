@@ -59,24 +59,31 @@ public class Playground {
         codeEditor = new JTextArea();
         codeEditor.setText(
             """
-            Set a to 1.
-            Set b to 1.
-            Set count to 10.
-            Loop:
-                If count is less than 1 then exit loop.
-                Set next to a plus b.
-                Set a to b.
-                Set b to next.
-                Set count to count minus 1.
-            End of loop.
-            
-            Declare function plusOne that takes parameters ( x ):
-                Set a to x plus 1.
-                Return a.
-            End of function.
-            
-            Set b to the result of calling plusOne with ( 18 ).
-            """);
+                    Set a to 1.
+                    Set b to 1.
+                    Set count to 10.
+                    Loop:
+                        If count is less than 1 then exit loop.
+                        Set next to a plus b.
+                        Set a to b.
+                        Set b to next.
+                        Set count to count minus 1.
+                    End of loop.
+                                
+                    Declare function plusOne that takes parameters ( x ):
+                        Set a to x plus 1.
+                        Return a.
+                    End of function.
+                                
+                    Set b to the result of calling plusOne with ( 18 ).
+                                
+                    Declare function square that takes parameters (x , y):
+                        Set a to x times x plus y times y.
+                        Return a.
+                    End of function.
+                                        
+                    Set c to the result of calling squared with ( the result of calling plusOne with ( 18 ), 23).
+                    """);
         astDump = new JTextArea();
         astDump.setEditable(false);
 
