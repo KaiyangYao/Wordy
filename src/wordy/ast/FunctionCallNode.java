@@ -24,8 +24,13 @@ public class FunctionCallNode extends ExpressionNode {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return false;
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+        FunctionCallNode functionCall = (FunctionCallNode) o;
+        return this.name.getName().equals(functionCall.name.getName());
     }
 
     @Override

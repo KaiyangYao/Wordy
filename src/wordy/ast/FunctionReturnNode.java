@@ -19,8 +19,14 @@ public class FunctionReturnNode extends StatementNode {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return false;
+    public boolean equals(Object o) {
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+
+        FunctionReturnNode functionReturn = (FunctionReturnNode) o;
+        return this.returnValue.equals(functionReturn.returnValue);
     }
 
     @Override
