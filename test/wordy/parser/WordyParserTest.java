@@ -248,12 +248,72 @@ public class WordyParserTest {
                     "Set a to x plus 1." +
                     "Return a." +
                     "End of function")
-            );
+        );
+        assertEquals(
+            new FunctionNode(
+                new VariableNode("addnums"),
+                List.of(new VariableNode("x"), new VariableNode("y")),
+                new BlockNode( parseStatement("set a to x plus y"), parseStatement("return a"))),
+            
+            parseStatement("Declare function addnums that takes parameters ( x, y ):" +
+                    "Set a to x plus y." +
+                    "Return a." +
+                    "End of function")
+        );
+        assertEquals(
+            new FunctionNode(
+                new VariableNode("addthreenums"),
+                List.of(new VariableNode("x"), new VariableNode("y"), new VariableNode("z")),
+                new BlockNode( parseStatement("set a to x plus (y plus z)"), parseStatement("return a"))),
+            
+            parseStatement("Declare function addthreenums that takes parameters ( x, y, z):" +
+                    "Set a to x plus (y plus z)." +
+                    "Return a." +
+                    "End of function")
+        );
     }
 
     @Test 
     void testFunctionCall() {
+        assertEquals(
+            new AssignmentNode(
+                new VariableNode("a"),
+                new FunctionCallNode(new VariableNode("addnums"), 
+                List.of( 
+                    new VariableNode("x"), 
+                    new VariableNode("y")
+                ))),
 
+            parseStatement("Set a to the result of calling addnums with (x, y)")
+        );
+        assertEquals(
+            new AssignmentNode(
+                new VariableNode("a"),
+                new FunctionCallNode(new VariableNode("addnums"), 
+                List.of( 
+                    new FunctionCallNode(
+                        new VariableNode("plusone"),
+                        List.of(new VariableNode("x"))
+                    ), 
+                    new VariableNode("y")
+                ))),
+
+            parseStatement("Set a to the result of calling addnums with (the result of calling plusone with (x), y)")
+        );
+        assertEquals(
+            new AssignmentNode(
+                new VariableNode("a"),
+                new FunctionCallNode(new VariableNode("addnums"), 
+                List.of( 
+                    new VariableNode("y"),
+                    new FunctionCallNode(
+                        new VariableNode("plusone"),
+                        List.of(new VariableNode("x"))
+                    )
+                ))),
+
+            parseStatement("Set a to the result of calling addnums with ( y, the result of calling plusone with ( x ) )")
+        );
     }
 
     @Test
