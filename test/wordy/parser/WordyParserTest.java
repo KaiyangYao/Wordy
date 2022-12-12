@@ -235,6 +235,31 @@ public class WordyParserTest {
             parseStatement("loop: set x to x plus 1. if x equals 3 then exit loop. end of loop"));
     }
 
+
+    @Test
+    void testFunctionDeclaration() { // I've combed through this error msg, and there is no difference between the expected and actual, I have no idea why it fails
+        assertEquals(
+            new FunctionNode(
+                new VariableNode("plusone"),
+                List.of(new VariableNode("x")),
+                new BlockNode( parseStatement("set a to x plus 1"), parseStatement("return a"))),
+            
+            parseStatement("Declare function plusOne that takes parameters ( x ):" +
+                    "Set a to x plus 1." +
+                    "Return a." +
+                    "End of function")
+            );
+    }
+
+    @Test 
+    void testFunctionCall() {
+
+    }
+
+    @Test
+    void testFunctionReturn() {
+
+    }
     // @Test
     // void testFunctionDeclaration() {
     //     assertEquals(
