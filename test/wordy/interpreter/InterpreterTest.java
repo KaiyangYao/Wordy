@@ -90,6 +90,40 @@ public class InterpreterTest {
         assertVariableEquals("y", 285);
     }
 
+    @Test
+    void executeFunctionCall() {
+        String program = """
+            Declare function compareTo that takes parameters ( x, y ):
+                If x is greater than y then return 1   \s
+                Else return 0.
+            End of function.
+            
+            Set result to the result of calling compareTo with (2, 3).
+        """;
+        runProgram(program);
+        assertVariableEquals("result", 0);
+        runProgram("Set result to the result of calling compareTo with (3, 2).");
+        assertVariableEquals("result", 1);
+
+        program = """
+                        
+            Declare function plusOne that takes parameters ( x ):
+                return x plus 1.
+            End of function.
+                    
+            Declare function sumSquared that takes parameters ( x, y ):
+                return x times x plus y times y.
+            End of function.
+                    
+            Set result to the result of calling sumSquared with (
+                the result of calling plusOne with (2),\s
+                the result of calling plusOne with (3)
+            ).        
+        """;
+        runProgram(program);
+        assertVariableEquals("result", 25);
+    }
+
     // ––––––– Helpers –––––––
 
     private void assertEvaluationEquals(double expected, String expression) {
