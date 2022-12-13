@@ -84,6 +84,18 @@ public class Playground {
                                         
                     Set c to the result of calling squared with ( the result of calling plusOne with ( 18 ), 23).
                     """);
+
+        /**
+            NOT SUPPORTED YET: Lexical capture
+
+            Declare function recursive that takes parameters ( x ):
+            Set a to 0.
+            If x is greater than 0 then
+            set a to the result of calling recursive with (x minus 1).
+                    Set a to a plus x times x.
+                    End of function.
+
+            Set z to the result of calling recursive with (3).*/
         astDump = new JTextArea();
         astDump.setEditable(false);
 
