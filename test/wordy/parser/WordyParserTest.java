@@ -235,7 +235,6 @@ public class WordyParserTest {
             parseStatement("loop: set x to x plus 1. if x equals 3 then exit loop. end of loop"));
     }
 
-
     @Test
     void testFunctionDeclaration() { // I've combed through this error msg, and there is no difference between the expected and actual, I have no idea why it fails
         assertEquals(
@@ -315,44 +314,7 @@ public class WordyParserTest {
             parseStatement("Set a to the result of calling addnums with ( y, the result of calling plusone with ( x ) )")
         );
     }
-
-    @Test
-    void testFunctionReturn() {
-
-    }
-    // @Test
-    // void testFunctionDeclaration() {
-    //     assertEquals(
-    //         new FunctionNode(
-    //             new VariableNode("plusone"),
-    //             List.of(new VariableNode("x")),
-    //             new BlockNode( parseStatement("set a to x plus 1") ),
-    //             new VariableNode("a")),
-    //         parseStatement("Declare function plusOne that takes parameters ( x ):" +
-    //                 "Set a to x plus 1." +
-    //                 "Return a." +
-    //                 "End of function"));
-    //     assertEquals(
-    //         new FunctionNode(
-    //             new VariableNode("sumsquares"),
-    //             Arrays.asList(new VariableNode("x"), new VariableNode("y")),
-    //             new BlockNode( parseStatement("Set a to (x times x) plus (y times y)") ),
-    //             new VariableNode("a")),
-    //     parseStatement("Declare function sumSquares that takes parameters ( x, y ):" +
-    //             "Set a to (x times x) plus (y times y)." +
-    //             "Return a." +
-    //             "End of function"));
-    //     assertEquals(
-    //         new FunctionNode(
-    //             new VariableNode("noargument"),
-    //             Collections.emptyList(),
-    //             null,
-    //             parseExpression("2 plus 3")),
-    //     parseStatement("Declare function noArgument that takes parameters ():" +
-    //             "Return 2 plus 3." +
-    //             "End of function"));
-    // }
-
+    
     @Test
     void testProgram() {
         assertParseError(() -> parseProgram(""));
