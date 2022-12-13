@@ -1,62 +1,51 @@
 # Wordy
 Kaiyang Yao, Aidan Alls
 
-Wordy is a toy programming language that supports simple arithmetic expressions, conditions, and loops.
+Wordy is a toy programming language that supports simple arithmetic expressions, conditions, and loops. It is a Paul Cantrell invention specifically for Macalester’s Programming Languages course. More descriptions can be found [here](/docs/wordy.md).
 
---FUNCTION DECLARATION-----------------------------------------------------------------------------------------------------------
+Besides the features described above, we brought function to Wordy. \
+Three new AST nodes are added to Wordy to support function. They are: FunctionNode, FunctionCallNode, and FunctionReturnNode. 
 
-We also added functions. The syntax for declaring a function is:
+## Declaring a Function
+Function Declaration is implemented in FunctionNode. We can declare a new function using the following syntax:
 
-"
+```
 Declare function <functionName> that takes parameters (<0 or more parameters>):
-    <blockNode for the function Body>
-    return <some value or nothing>
+    <BlockNode for the function body>
+    return <ExpressionNode | "nothing">
 End of function.
-"
+```
+
 NOTE: The function doesn't require any parameters, but does require the parentheses.
 
---CALLING FUNCTIONS---------------------------------------------------------------------------------------------------------------
+## Calling a Function
+To call a function declared before, we can use this syntax:
 
-To call a function, use this syntax:
+```
+the result of calling <functionName> with (<0 or more parameters>).
+```
 
-"
-the result of calling <functionName> with (<parameters>).
-"
+Function calls are expressions, so they go anywhere an expression would go. This means they can be assigned to variables, or be passed as arguments to other functions.
 
-Function calls are expressions, so they go anywhere an expression would go. This means they can be assinged to variables, or be passed as arguments to other functions.
+Example:
+```
+Set x to the result of calling plusOne with (2).
+Set y to the result of calling sumNumbers with (the result of calling plueOne with (1), 5)
+```
 
-example:
-"
-set x to the result of calling sumNumbers with (the result of calling doubleNumber with (2), 5)
-"
+## Function Return
+Similar to other languages. Explicitly stating `return` will break the function and return the statement after the return keyword.
 
---RETURN VALUE---------------------------------------------------------------------------------------------------------------------
-
-The "return" keyword does not break out of the function, so any code after a return statement will still execute. 
-
-example:
-"
-Declare function test that takes parameters ( x ):
-    if x is greater than 10 then set a to 5 else set a to 15.
-    Return a.
+Example:
+```
+Declare function compare that takes parameters ( x, y ):
+    If x is greater than y then return 1
+    Else return 0.
 End of function.
-"
-This function works as expected, because return a is the last line of code.
+```
 
-"
-Declare function test that takes parameters ( x ):
-    Set a to 5.
-    if x is greater than 10 then return a else set a to 15.
-    Set a to a plus 1.
-    Return a.
-End of function.
-"
-This function, however will never return 5 even if x is greater than 10, because it will continue on to "set a to a plus 1".
-So while using return in multiple places doesn't necisarily break functions, it's best to set values in if statements and return
-some value at the end of the function body.
+This function will return 1 if `x > y` and 0 otherwise.
 
-
---NO RECURSION---------------------------------------------------------------------------------------------------------------------
-
-While function calls can be nested, there is no lexical capture, so functions cannot reference themselves within their own body.
+## Function Recursion
+While function calls can be nested, there is no lexical capture. So functions cannot reference themselves within their own body.
 This means that recursion is impossible.
