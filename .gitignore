@@ -39,3 +39,4 @@ lib
 gradlew*
 gradle/wrapper
 *.iml
+.DS_Store
