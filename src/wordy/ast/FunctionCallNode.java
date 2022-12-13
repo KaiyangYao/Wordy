@@ -1,6 +1,7 @@
 package wordy.ast;
 
 import wordy.interpreter.EvaluationContext;
+import wordy.interpreter.FunctionReturned;
 
 import java.io.PrintWriter;
 import java.util.*;
@@ -43,16 +44,22 @@ public class FunctionCallNode extends ExpressionNode {
         FunctionNode function = context.getFunction(name.getName());
         List<VariableNode> params = function.getParams();
         EvaluationContext closureContext = new EvaluationContext();
+        double returnVal = 0.0;
+
         if (params.size() != args.size()) {
             throw new RuntimeException("Incorrect number of arguments");
         }
-        for (int i = 0; i < params.size(); i++) {
-            closureContext.set(params.get(i).getName(), args.get(i).evaluate(context));
+
+        try {
+            for (int i = 0; i < params.size(); i++) {
+                closureContext.set(params.get(i).getName(), args.get(i).evaluate(context));
+            }
+            function.getBody().doRun(closureContext);
+        } catch (FunctionReturned e) {
+            returnVal = closureContext.get("RETURN");
         }
 
-        function.getBody().doRun(closureContext);
-
-        return closureContext.get("RETURN");
+        return returnVal;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package wordy.ast;
 
 import wordy.interpreter.EvaluationContext;
+import wordy.interpreter.FunctionReturned;
 
 import java.io.PrintWriter;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class FunctionReturnNode extends StatementNode {
     @Override
     protected void doRun(EvaluationContext context) {
         context.set("RETURN", returnValue.doEvaluate(context));
+        throw new FunctionReturned();
     }
 
     @Override
