@@ -192,23 +192,23 @@ public class WordyParser extends BaseParser<ASTNode> {
             KeyPhrase("the result of calling"),
             OptionalSurroundingSpace(Variable()),
             KeyPhrase("with"),
-            Sequence(
-                OptionalSurroundingSpace("("),
-                OneOrMore(
-                    FirstOf(
-                        OptionalSurroundingSpace(")"),
-                        Sequence(
-                            Expression(),
-                            argList.get().add((ExpressionNode) pop()),
-                            FirstOf(
-                                OptionalSurroundingSpace(","),
-                                OptionalSurroundingSpace(")")
-                            )
-                        )
-                    )
-                )
+            OptionalSurroundingSpace("("),
+            Optional(
+                FunctionArgument(argList),
+                ZeroOrMore(Sequence(
+                    OptionalSurroundingSpace(","),
+                    FunctionArgument(argList)
+                ))
             ),
+            OptionalSurroundingSpace(")"),
             push(new FunctionCallNode((VariableNode) pop(), argList.get()))
+        );
+    }
+
+    Rule FunctionArgument(Var<List<ExpressionNode>> argList) {
+        return Sequence(
+            Expression(),
+            argList.get().add((ExpressionNode) pop())
         );
     }
 
