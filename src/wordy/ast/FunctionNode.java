@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Wordy’s function declaration node, which stores the current function into local context when being executed
+ */
 public class FunctionNode extends StatementNode {
     private final VariableNode name;
     private final List<VariableNode> params;

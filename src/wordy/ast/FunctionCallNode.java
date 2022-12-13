@@ -6,6 +6,12 @@ import wordy.interpreter.FunctionReturned;
 import java.io.PrintWriter;
 import java.util.*;
 
+/**
+ * Wordy’s function call node, which finds the targeted function in the context and executes it.
+ * It terminates the function by catching a `FunctionReturned` exception.
+ *
+ * Recursion is NOT allowed because the implementation doesn't support lexical capture / access local scope in function.
+ */
 public class FunctionCallNode extends ExpressionNode {
     private final VariableNode name;
     private final List<ExpressionNode> args;
@@ -54,6 +60,7 @@ public class FunctionCallNode extends ExpressionNode {
             for (int i = 0; i < params.size(); i++) {
                 closureContext.set(params.get(i).getName(), args.get(i).evaluate(context));
             }
+            closureContext.setFunction(name.getName(), function);
             function.getBody().doRun(closureContext);
         } catch (FunctionReturned e) {
             returnVal = closureContext.get("RETURN");

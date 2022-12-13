@@ -7,6 +7,11 @@ import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Wordy’s function return node. It sets the RETURN variable to the context.
+ *
+ * The interpreter implements this by throwing a `FunctionReturned` exception.
+ */
 public class FunctionReturnNode extends StatementNode {
     private final ExpressionNode returnValue;
 

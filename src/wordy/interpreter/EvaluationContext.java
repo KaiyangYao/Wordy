@@ -45,14 +45,19 @@ public class EvaluationContext {
         variables.put(name, value);
     }
 
+    /**
+     * Returns the specific FunctionNode with the given name.
+     */
     public FunctionNode getFunction(String name) {
         return functions.get(name);
     }
 
+    /**
+     * Changes the specific FunctionNode with the given name.
+     */
     public void setFunction(String name, FunctionNode function) {
         functions.put(name, function);
     }
-
     public Map<String, Double> allVariables() {
         return Collections.unmodifiableMap(variables);
     }
