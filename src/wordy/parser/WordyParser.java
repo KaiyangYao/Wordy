@@ -132,56 +132,26 @@ public class WordyParser extends BaseParser<ASTNode> {
         return Sequence(KeyPhrase("exit loop"), push(new LoopExitNode()));
     }
 
-    // TODO: Refactor FunctionVariables Rule
-//    Rule FunctionVariables(Var<List<ExpressionNode>> varList) {
-//        return Sequence(
-//            OptionalSurroundingSpace("("),
-//            OneOrMore(
-//                FirstOf(
-//                    OptionalSurroundingSpace(")"),
-//                    Sequence(
-//                        Expression(),
-//                        varList.get().add((ExpressionNode) pop()),
-//                        FirstOf(
-//                                OptionalSurroundingSpace(","),
-//                                OptionalSurroundingSpace(")")
-//                        )
-//                    )
-//                )
-//            )
-//        );
-//    }
-
     Rule FunctionDeclaration() {
         Var<List<VariableNode>> varList = new Var<>(new ArrayList<>());
-        Var<List<StatementNode>> blockNode = new Var<>(new ArrayList<>());
         return Sequence(
             KeyPhrase("declare function"),
             OptionalSpace(),
             Variable(),
             KeyPhrase("that takes parameters"),
-            Sequence(
-                OptionalSurroundingSpace("("),
-                OneOrMore(
-                    FirstOf(
-                        OptionalSurroundingSpace(")"),
-                        Sequence(
-                            Variable(),
-                            varList.get().add((VariableNode) pop()),
-                            FirstOf(
-                                OptionalSurroundingSpace(","),
-                                OptionalSurroundingSpace(")")
-                            )
-                        )
-                    )
-                )
+            OptionalSurroundingSpace("("),
+            Optional(
+                FunctionParameters(varList),
+                ZeroOrMore(Sequence(
+                    OptionalSurroundingSpace(","),
+                    FunctionParameters(varList)
+                ))
             ),
+            OptionalSurroundingSpace(")"),
             OptionalSurroundingSpace(":"),
-            OneOrMore(
-                Block()
-            ),
+            OneOrMore(Block()),
             KeyPhrase("end of function"),
-            push(new FunctionNode((VariableNode) pop(1), varList.get(),  (StatementNode) pop()))
+            push(new FunctionNode((VariableNode) pop(1), varList.get(), (StatementNode) pop()))
         );
     }
 
@@ -207,8 +177,15 @@ public class WordyParser extends BaseParser<ASTNode> {
 
     Rule FunctionArgument(Var<List<ExpressionNode>> argList) {
         return Sequence(
-            Expression(),
-            argList.get().add((ExpressionNode) pop())
+                Expression(),
+                argList.get().add((ExpressionNode) pop())
+        );
+    }
+
+    Rule FunctionParameters(Var<List<VariableNode>> argList) {
+        return Sequence(
+                Variable(),
+                argList.get().add((VariableNode) pop())
         );
     }
 

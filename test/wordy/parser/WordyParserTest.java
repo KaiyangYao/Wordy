@@ -314,7 +314,7 @@ public class WordyParserTest {
             parseStatement("Set a to the result of calling addnums with ( y, the result of calling plusone with ( x ) )")
         );
     }
-    
+
     @Test
     void testProgram() {
         assertParseError(() -> parseProgram(""));
